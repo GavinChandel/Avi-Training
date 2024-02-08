@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// Abstract class Item
+// Abstract class Item representing items in a library
 abstract class Item {
-    // Private fields of Item class
+    // Fields common to all items
     private String id;
     private String title;
     private String author;
     private boolean checkedOut;
-    private int quantity; // Add quantity field
+    private int quantity; // Quantity of the item in stock
 
-    // Constructor for Item class
+    // Constructor to initialize common fields
     public Item(String id, String title, String author, int quantity) {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.quantity = quantity; // Set quantity
-        this.checkedOut = false; // Initially, item is not checked out
+        this.quantity = quantity; // Initialize quantity
+        this.checkedOut = false; // Initially not checked out
     }
 
-    // Getter methods for private fields
+    // Getters for common fields
     public String getId() {
         return id;
     }
@@ -41,62 +41,78 @@ abstract class Item {
 
     // Method to check out the item
     public void checkOut() {
-        if (quantity > 0) { // If item is available
-            quantity--; // Decrease quantity
-            checkedOut = true; // Mark item as checked out
-            System.out.println('"'+title+'"'+ " has been checked out."); // Print message
+        if (quantity > 0) {
+            quantity--; // Decrease quantity when checked out
+            checkedOut = true;
+            System.out.println(title + " has been checked out.");
         } else {
-            System.out.println("Sorry, " +'"' +title +'"'+ " is out of stock."); // Print message if item is out of stock
+            System.out.println("Sorry, " + title + " is out of stock.");
         }
     }
 
     // Method to return the item
     public void returnItem() {
-        if (checkedOut) { // If item is checked out
-            quantity++; // Increase quantity
-            checkedOut = false; // Mark item as returned
-            System.out.println(title + " has been returned."); // Print message
+        if (checkedOut) {
+            quantity++; // Increase quantity when returned
+            checkedOut = false;
+            System.out.println(title + " has been returned.");
         } else {
-            System.out.println(title + " is already in the library."); // Print message if item is already in library
+            System.out.println(title + " is already in the library.");
         }
     }
 
-    // Abstract method to display item details
+    // Abstract method to display item details, to be implemented by subclasses
     public abstract void displayDetails();
 }
 
 // Book class inheriting from Item
 class Book extends Item {
-    // Private field of Book class
-    private String ISBN;
+    private String ISBN; // Additional field for books
 
-    // Constructor for Book class
+    // Constructor calling superclass constructor and initializing ISBN
     public Book(String id, String title, String author, String ISBN, int quantity) {
-        super(id, title, author, quantity); // Call superclass constructor
-        this.ISBN = ISBN; // Initialize ISBN
+        super(id, title, author, quantity);
+        this.ISBN = ISBN;
     }
 
-    // Override displayDetails method
+    // Override displayDetails method to display book details
     @Override
     public void displayDetails() {
-        // Display details of the book
-        System.out.println("ID- " + getId()+", Title- " + getTitle()+", Author- " + getAuthor()+", ISBN- " + ISBN+", Quantity- " + getQuantity());
+        System.out.println("Book Details: ID: " + getId() + ", Title: " + getTitle() + ", Author: " + getAuthor() + ", ISBN: " + ISBN + ", Quantity: " + getQuantity());
     }
+
 }
 
-// LibraryMember class
+// Magazine class inheriting from Item
+class Magazine extends Item {
+    private String issueNumber; // Additional field for magazines
+
+    // Constructor calling superclass constructor and initializing issueNumber
+    public Magazine(String id, String title, String author, String issueNumber, int quantity) {
+        super(id, title, author, quantity);
+        this.issueNumber = issueNumber;
+    }
+
+    // Override displayDetails method to display magazine details
+    @Override
+    public void displayDetails() {
+        System.out.println("Magazine Details: ID: " + getId() + ", Title: " + getTitle() + ", Author: " + getAuthor() + ", Issue Number: " + issueNumber + ", Quantity: " + getQuantity());
+    }
+
+}
+
+// LibraryMember class representing members of the library
 class LibraryMember {
-    // Private fields of LibraryMember class
     private String memberId;
     private String name;
 
-    // Constructor for LibraryMember class
+    // Constructor to initialize member ID and name
     public LibraryMember(String memberId, String name) {
         this.memberId = memberId;
         this.name = name;
     }
 
-    // Getter methods for private fields
+    // Getters for member ID and name
     public String getMemberId() {
         return memberId;
     }
@@ -116,60 +132,61 @@ class LibraryMember {
     }
 }
 
-// Library class
+// Library class representing a library with inventory and members
 class Library {
-    // Private fields of Library class
-    private List<Item> inventory;
-    private List<LibraryMember> members;
+    private List<Item> inventory; // List to store library items
+    private List<LibraryMember> members; // List to store library members
 
-    // Constructor for Library class
+    // Constructor to initialize inventory and members lists
     public Library() {
-        inventory = new ArrayList<>(); // Initialize inventory as an ArrayList
-        members = new ArrayList<>(); // Initialize members as an ArrayList
+        inventory = new ArrayList<>();
+        members = new ArrayList<>();
     }
 
     // Method to add items to inventory
     public void addItem(Item item) {
-        inventory.add(item); // Add item to inventory
+        inventory.add(item);
     }
 
     // Method to register members
     public void registerMember(LibraryMember member) {
-        members.add(member); // Add member to list of members
+        members.add(member);
     }
 
-    // Method to display item details
+    // Method to display details of all items in inventory
     public void displayItemDetails() {
         for (Item item : inventory) {
-            item.displayDetails(); // Display details of each item in inventory
+            item.displayDetails();
         }
     }
 
-    // Getter methods for private fields
+    // Getter for inventory
     public List<Item> getInventory() {
         return inventory;
     }
 
-    public List<LibraryMember> getMembers(){
+    // Getter for members
+    public List<LibraryMember> getMembers() {
         return members;
     }
 }
 
-// Main class LibraryMgmtSys
+// Main class
 public class LibraryMgmtSys {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); // Create a Scanner object for user input
-        Library library = new Library(); // Create a Library object
+        Scanner scanner = new Scanner(System.in);
+        Library library = new Library(); // Create a new library object
 
         while (true) {
             // Display menu options
-            System.out.println("\n1. Add item to library");
-            System.out.println("2. Register a member");
-            System.out.println("3. Display members");
-            System.out.println("4. Check out an item");
-            System.out.println("5. Return an item");
-            System.out.println("6. Display item details");
-            System.out.println("7. Exit");
+            System.out.println("\n1. Add book to library");
+            System.out.println("2. Add magazine to library");
+            System.out.println("3. Register a member");
+            System.out.println("4. Display member details");
+            System.out.println("5. Check out an item");
+            System.out.println("6. Return an item");
+            System.out.println("7. Display item details");
+            System.out.println("8. Exit");
             System.out.print("Select an option: ");
 
             int option = scanner.nextInt(); // Read user input for menu option
@@ -177,8 +194,9 @@ public class LibraryMgmtSys {
 
             try {
                 switch (option) {
-                    case 1:
-                        // Add a book to the library
+                    // Case statements for each menu option
+                    case 1: // Add book
+                        // Read book details from user input
                         System.out.println("Enter details of the book:");
                         System.out.print("ID: ");
                         String id = scanner.nextLine();
@@ -189,72 +207,86 @@ public class LibraryMgmtSys {
                         System.out.print("ISBN: ");
                         String ISBN = scanner.nextLine();
                         System.out.print("Quantity: ");
-                        int quantity= scanner.nextInt();
-                        Book book = new Book(id, title, author, ISBN,quantity); // Create a new Book object
-                        library.addItem(book); // Add the book to the library
-                        System.out.println("Item added successfully!!!");
+                        int quantity = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline character
+                        Book book = new Book(id, title, author, ISBN, quantity); // Create a new book object
+                        library.addItem(book); // Add book to library inventory
                         break;
-                    case 2:
-                        // Register a library member
+                    case 2: // Add magazine
+                        // Read magazine details from user input
+                        System.out.println("Enter details of the magazine:");
+                        System.out.print("ID: ");
+                        String magazineId = scanner.nextLine();
+                        System.out.print("Title: ");
+                        String magazineTitle = scanner.nextLine();
+                        System.out.print("Author: ");
+                        String magazineAuthor = scanner.nextLine();
+                        System.out.print("Issue Number: ");
+                        String issueNumber = scanner.nextLine();
+                        System.out.print("Quantity: ");
+                        int magazineQuantity = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline character
+                        Magazine magazine = new Magazine(magazineId, magazineTitle, magazineAuthor, issueNumber, magazineQuantity); // Create a new magazine object
+                        library.addItem(magazine); // Add magazine to library inventory
+                        break;
+                    case 3: // Register member
+                        // Read member details from user input
                         System.out.println("Enter details of the library member:");
                         System.out.print("Member ID: ");
                         String memberId = scanner.nextLine();
                         System.out.print("Member Name: ");
                         String name = scanner.nextLine();
-                        LibraryMember member = new LibraryMember(memberId, name); // Create a new LibraryMember object
-                        library.registerMember(member); // Register the member
-                        System.out.println("Member added successfully!!!");
+                        LibraryMember member = new LibraryMember(memberId, name); // Create a new member object
+                        library.registerMember(member); // Register member in the library
                         break;
-                    case 3:
-                        // Display all library members
-                        System.out.println("Members:");
-                        for (LibraryMember member1:library.getMembers()) {
-                            String id1 = member1.getMemberId();
-                            String s = member1.getName();
-                            System.out.println(id1+" "+s);
+                    case 4: // Display member details
+                        // Display details of all library members
+                        System.out.println("Details of the library member:");
+                        for (LibraryMember i1 : library.getMembers()) {
+                            String s = i1.getName();
+                            String s1 = i1.getMemberId();
+                            System.out.println("Name -> " + s);
+                            System.out.println("Id of member -> " + s1);
                         }
                         break;
-                    case 4:
-                        // Check out an item
+                    case 5: // Check out an item
+                        // Prompt user for item ID to check out
                         System.out.println("Enter the ID of the item to be checked out:");
                         String checkoutId = scanner.nextLine();
                         for (Item item : library.getInventory()) {
                             if (item.getId().equals(checkoutId)) {
-                                item.checkOut();
+                                item.checkOut(); // Check out the item
                                 break;
                             }
                         }
                         break;
-                    case 5:
-                        // Return an item
+                    case 6: // Return an item
+                        // Prompt user for item ID to return
                         System.out.println("Enter the ID of the item to be returned:");
                         String returnId = scanner.nextLine();
                         for (Item item : library.getInventory()) {
                             if (item.getId().equals(returnId)) {
-                                item.returnItem();
-                                System.out.println("Item returned successfully!!!");
+                                item.returnItem(); // Return the item
                                 break;
                             }
                         }
                         break;
-                    case 6:
-                        // Display details of all items in the library
-                        System.out.println("Item Details:");
+                    case 7: // Display item details
+                        // Display details of all items in library inventory
+                        System.out.println("Item Details:  ");
                         library.displayItemDetails();
                         break;
-                    case 7:
-                        // Exit the program
+                    case 8: // Exit the program
                         System.out.println("Exiting...");
-                        scanner.close(); // Close the scanner
-                        System.exit(0); // Exit the program
-                    default:
-                        // Handle invalid option
+                        scanner.close(); // Close scanner
+                        System.exit(0); // Exit program
+                    default: // Handle invalid option
                         System.out.println("Invalid option. Please try again.");
                 }
             } catch (Exception e) {
-                // Catch any exceptions and display error message
+                // Handle any exceptions
                 System.out.println("Error: " + e.getMessage());
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine(); // Consume the newline character
             }
         }
     }
