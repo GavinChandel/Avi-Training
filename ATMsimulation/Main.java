@@ -20,7 +20,7 @@ public class Main {
         Bank userBank= null;
 
         // making objects of accounts of different types
-        for(int i = 0; i < 20; ++i){
+        for(int i = 0; i < 10; ++i){
             String name = String.format("Customer"+(i+1));
             String pin = String.format("%04d", i+1);
             String accountNumber = String.format("%010d", i + 200000);
